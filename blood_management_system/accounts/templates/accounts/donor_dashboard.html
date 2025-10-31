@@ -1,0 +1,172 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Donor Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f5f7fa;
+            font-family: 'Segoe UI', sans-serif;
+            min-height: 100vh;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .user-card {
+            border-radius: 12px;
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .card-section {
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+            padding: 20px;
+            background: white;
+            margin-bottom: 20px;
+            transition: transform 0.2s;
+        }
+
+        .card-section:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .form-floating > input,
+        .form-floating > select {
+            border-radius: 10px;
+            padding: 1rem 0.75rem;
+            border: 1px solid #ced4da;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .form-floating > input:focus,
+        .form-floating > select:focus {
+            border-color: #6a11cb;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(106,17,203,0.2);
+        }
+
+        .form-floating > label {
+            color: #6c757d;
+            font-weight: 500;
+            padding-left: 0.75rem;
+        }
+
+        .btn-primary {
+            background-color: #6a11cb;
+            border: none;
+            font-weight: 600;
+            padding: 0.75rem;
+            width: 100%;
+            transition: 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #2575fc;
+        }
+
+        .badge-pending {
+            background-color: #ffc107;
+            color: #212529;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .badge-approved {
+            background-color: #198754;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .badge-rejected {
+            background-color: #dc3545;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        h5.section-title {
+            color: #6a11cb;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        ul.donation-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- User info card -->
+    <div class="user-card">
+        <h3>Welcome, {{ user.username }}</h3>
+        <p>Your Blood Group: {{ user.blood_group|default:"N/A" }}</p>
+        <p>City: {{ user.city|default:"N/A" }}</p>
+    </div>
+<div class="d-flex justify-content-end mb-3">
+    <a href="{% url 'logout' %}" class="btn btn-outline-danger">Logout</a>
+</div>
+
+    <!-- Donation request form -->
+    <div class="card-section">
+        <h5 class="section-title">Make a Blood Donation Request</h5>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <form method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-floating mb-3">
+                    {{ field }}
+                    {{ field.label_tag }}
+                    {% for error in field.errors %}
+                        <div class="text-danger small mt-1">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+    <!-- Donation history -->
+    <div class="card-section">
+        <h5 class="section-title">Your Donations</h5>
+        <ul class="donation-list list-unstyled">
+            {% for d in donations %}
+                <li>
+                    <span>{{ d.blood_group }} - {{ d.units }} units</span>
+                    {% if d.status == "Pending" %}
+                        <span class="badge badge-pending">{{ d.status }}</span>
+                    {% elif d.status == "Approved" %}
+                        <span class="badge badge-approved">{{ d.status }}</span>
+                    {% elif d.status == "Rejected" %}
+                        <span class="badge badge-rejected">{{ d.status }}</span>
+                    {% endif %}
+                </li>
+            {% empty %}
+                <li>No donations yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
