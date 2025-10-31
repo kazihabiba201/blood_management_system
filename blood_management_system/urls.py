@@ -21,6 +21,7 @@ urlpatterns = [
     path('dashboard/', dashboard_view, name='dashboard'),
     path('logout/', logout_view, name='logout'),
     path('api/', include('blood.urls')),
+    path('accounts/', include('accounts.urls')),
     path('admin-dashboard/', admin_dashboard, name='admin_dashboard'),
     path('approve-request/<int:request_id>/', approve_request, name='approve_request'),
     path('reject-request/<int:request_id>/', reject_request, name='reject_request'),

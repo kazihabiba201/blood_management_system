@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-js5m#qm4w$ro)(x-(5-sgqd2=xu#h)1!c+9lod7*c_%e&vwyuv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['https://blood-management-system-2.onrender.com/', 'localhost', '127.0.0.1']
 
 
 
