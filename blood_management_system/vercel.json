@@ -4,6 +4,6 @@
     { "src": "manage.py", "use": "@vercel/python" }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "blood_management_system/wsgi.py" }
+    { "src": "/(.*)", "dest": "manage.py" }
   ]
 }
